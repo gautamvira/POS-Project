@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <filesystem>
+#include <cstdio>
 
 using namespace std;
 
@@ -38,7 +39,7 @@ void createFile() {
 void removeFile() {
 	string fileName;
 	ifstream check;
-	cout << "Enter file name to be created: ";
+	cout << "Enter file name to be deleted: ";
 	cin >> fileName;
 	check.open(fileName);
 	if (!check.is_open()) {
@@ -59,29 +60,31 @@ void removeFile() {
 
 void renameFile() {
 	string oldFileName, newFileName;
-	ifstream check;
+	fstream check;
 	cout << "Enter old file name: ";
 	cin >> oldFileName;
+	const char * o = oldFileName.c_str();
 	check.open(oldFileName);
 	if (!check.is_open()) {
 		cout << "File does not exist." << endl;
 		return;
 	}
+	check.close();
 	cout << "Enter new file name: ";
 	cin >> newFileName;
-
-	const char * o = oldFileName.c_str();
 	const char * n = newFileName.c_str();
 
+
 	try {
-		rename(o, n);
+		if (rename(o, n) != 0)
+			cout << "File not renamed." << endl;
+		else
+			cout << "File renamed." << endl;
 	}
 	catch (exception const& e) {
 		cout << "Error: " << e.what() << endl;
 		return;
 	}
-
-	cout << "File renamed." << endl;
 	return;
 }
 
@@ -115,34 +118,83 @@ void copyFile() {
 	return;
 }
 
+void clearFile() {
+	ofstream clear;
+	ifstream check;
+	string fileName;
+	cout << "Enter file name to clear: " << endl;
+	cin >> fileName;
+	check.open(fileName);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	check.close();
+	clear.open(fileName);
+	if (clear.is_open())
+		cout << "File cleared." << endl;
+	else
+		cout << "File not cleared." << endl;
+	return;
+}
+
 void moveFile() {
 	string oldPath, newPath;
+	ifstream check;
 	cout << "Enter old path of the file: ";
 	cin >> oldPath;
+	const char * o = oldPath.c_str();
+	check.open(oldPath);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	check.close();
 	cout << "Enter new path of the file: ";
 	cin >> newPath;
 
-	const char * o = oldPath.c_str();
 	const char * n = newPath.c_str();
 
 	try {
-		rename(o, n);
+		if (rename(o, n) != 0)
+			cout << "File not moved." << endl;
+		else
+			cout << "File moved." << endl;
 	}
 	catch (exception const& e) {
 		cout << "Error: " << e.what() << endl;
 		return;
 	}
-
-	cout << "File moved." << endl;
 	return;
 
+}
+
+void appendText() {
+	ofstream file;
+	ifstream check;
+	string fileName;
+	string text;
+	cout << "Enter file name to be appended: ";
+	cin >> fileName;
+	check.open(fileName);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	check.close();
+	file.open(fileName, ios::app);
+	cout << "Enter text to enter: ";
+	cin >> text;
+	file << text;
+	cout << "Text added to the end." << endl;
+	return;
 }
 
 int main() {
 	int ch;
 	while (1) {
 		cout << "Enter a choice: " << endl;
-		cout << "1. Create file\n2. Delete file\n3. Rename file\n4. Copy file\n5. Move file\n";
+		cout << "1. Create file\n2. Delete file\n3. Rename file\n4. Copy file\n5. Move file\n6. Clear File\n7. Append text\n";
 		cin >> ch;
 		switch (ch) {
 		case 1:
@@ -164,6 +216,14 @@ int main() {
 		case 5:
 			moveFile();
 			break;
+
+		case 6:
+			clearFile();
+			break;
+
+		case 7:
+			appendText();
+				break;
 
 		default:
 			cout << "Invalid option." << endl;
