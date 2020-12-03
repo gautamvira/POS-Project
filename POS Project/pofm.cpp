@@ -46,6 +46,7 @@ void removeFile() {
 		cout << "File does not exist." << endl;
 		return;
 	}
+	check.close();
 	const char * c = fileName.c_str();
 	try {
 		remove(c);
