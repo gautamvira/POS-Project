@@ -11,7 +11,10 @@ void createFile(char para[]) {
 	ifstream check;
 	string fileName;
 	fileName = para;
-	
+	if (!strcmp(para, "/h")) {
+		cout << "mkdir: Its use to create a file\nUsage: mkdir Filename "<<endl;
+		return;
+	}
 	check.open(fileName);
 	if (check.is_open()) {
 		cout << "File already exists." << endl;
@@ -34,6 +37,10 @@ void removeFile(char para[]) {
 	string fileName;
 	ifstream check;
 	fileName = para;
+	if (!strcmp(para, "/h")) {
+		cout << "rm: Its use to remove/delete a file\nUsage: rm Filename " << endl;
+		return;
+	}
 	check.open(fileName);
 	if (!check.is_open()) {
 		cout << "File does not exist." << endl;
@@ -53,6 +60,10 @@ void removeFile(char para[]) {
 }
 
 void renameFile(char para[], char para1[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "rename: Its use to rename a file\nUsage: rename oldFilename newFilename " << endl;
+		return;
+	}
 	int  result;
 	/* Attempt to rename file: */
 	result = rename(para, para1);
@@ -63,6 +74,10 @@ void renameFile(char para[], char para1[]) {
 }
 
 void copyFile(char para[], char para1[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "copy: Its use to copy a file\nUsage: copy orignalFile copyFile " << endl;
+		return;
+	}
 	string oldFileName, newFileName, text;
 	ifstream oldFile;
 	ofstream newFile;
@@ -91,6 +106,10 @@ void copyFile(char para[], char para1[]) {
 }
 
 void moveFile(char para[], char para1[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "move: Its use to move a file\nUsage: move oldpath newpath " << endl;
+		return;
+	}
 	string oldPath, newPath;
 	oldPath = para;
 	newPath = para1;
@@ -110,6 +129,10 @@ void moveFile(char para[], char para1[]) {
 
 }
 void appendText(char para[], char para1[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "txtapp: Its use to append a textfile\nUsage: textapp Filename \"text\" " << endl;
+		return;
+	}
 	ofstream file;
 	ifstream check;
 	string fileName;
@@ -129,6 +152,10 @@ void appendText(char para[], char para1[]) {
 }
 
 void showFile(char para[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "txtshow: Its use to show contents of a txtfile\nUsage: txtshow Filename " << endl;
+		return;
+	}
 	string oldFileName, newFileName, text;
 	ifstream oldFile;
 	ifstream check;
@@ -152,6 +179,10 @@ void showFile(char para[]) {
 }
 
 void clearFile(char para[]) {
+	if (!strcmp(para, "/h")) {
+		cout << "txtclr: Its use to clear contents of a txtfile\nUsage: txtclr Filename " << endl;
+		return;
+	}
 	ofstream clear;
 	ifstream check;
 	string fileName;
