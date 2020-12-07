@@ -1,8 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
-#include <string.h>
 #include <stdio.h>
 #include <filesystem>
 
@@ -130,6 +128,29 @@ void appendText(char para[], char para1[]) {
 	return;
 }
 
+void showFile(char para[]) {
+	string oldFileName, newFileName, text;
+	ifstream oldFile;
+	ifstream check;
+	oldFileName = para;
+	check.open(oldFileName);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	const char* o = oldFileName.c_str();
+	oldFile.open(o);
+	try {
+		while (getline(oldFile, text))
+			cout << text << endl;
+	}
+	catch (exception const& e) {
+		cout << "Error: " << e.what() << endl;
+		return;
+	}
+	return;
+}
+
 void clearFile(char para[]) {
 	ofstream clear;
 	ifstream check;
@@ -228,6 +249,9 @@ int main() {
 		}
 		else if (!strcmp(cmd, "txtclr\0")) {
 			clearFile(para);
+		}
+		else if (!strcmp(cmd, "txtshow\0")) {
+			showFile(para);
 		}
 	}
 }
