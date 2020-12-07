@@ -1,22 +1,19 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
+#include <string.h>
+#include <stdio.h>
 #include <filesystem>
 
 using namespace std;
 
-void createFile() {
+void createFile(char para[]) {
 	ofstream file;
 	ifstream check;
 	string fileName;
-	cout << "Enter file name to be created: ";
-	cin >> fileName;
-	int cmp = fileName.compare("\\h");
-
-	if (cmp == 0) {
-		cout << "Help: " << endl;
-		createFile();
-	}
+	fileName = para;
+	
 	check.open(fileName);
 	if (check.is_open()) {
 		cout << "File already exists." << endl;
@@ -35,17 +32,17 @@ void createFile() {
 	return;
 }
 
-void removeFile() {
+void removeFile(char para[]) {
 	string fileName;
 	ifstream check;
-	cout << "Enter file name to be created: ";
-	cin >> fileName;
+	fileName = para;
 	check.open(fileName);
 	if (!check.is_open()) {
 		cout << "File does not exist." << endl;
 		return;
 	}
-	const char * c = fileName.c_str();
+	check.close();
+	const char* c = fileName.c_str();
 	try {
 		remove(c);
 	}
@@ -57,48 +54,28 @@ void removeFile() {
 	return;
 }
 
-void renameFile() {
-	string oldFileName, newFileName;
-	ifstream check;
-	cout << "Enter old file name: ";
-	cin >> oldFileName;
-	check.open(oldFileName);
-	if (!check.is_open()) {
-		cout << "File does not exist." << endl;
-		return;
-	}
-	cout << "Enter new file name: ";
-	cin >> newFileName;
-
-	const char * o = oldFileName.c_str();
-	const char * n = newFileName.c_str();
-
-	try {
-		rename(o, n);
-	}
-	catch (exception const& e) {
-		cout << "Error: " << e.what() << endl;
-		return;
-	}
-
-	cout << "File renamed." << endl;
-	return;
+void renameFile(char para[], char para1[]) {
+	int  result;
+	/* Attempt to rename file: */
+	result = rename(para, para1);
+	if (result != 0)
+		printf("Could not rename '%s'\n", para);
+	else
+		printf("File '%s' renamed to '%s'\n", para, para1);
 }
 
-void copyFile() {
+void copyFile(char para[], char para1[]) {
 	string oldFileName, newFileName, text;
 	ifstream oldFile;
 	ofstream newFile;
 	ifstream check;
-	cout << "Enter name of existing file: ";
-	cin >> oldFileName;
+	oldFileName = para;
+	newFileName = para1;
 	check.open(oldFileName);
 	if (!check.is_open()) {
 		cout << "File does not exist." << endl;
 		return;
 	}
-	cout << "Enter name of the copied file: ";
-	cin >> newFileName;
 	const char * o = oldFileName.c_str();
 	const char * n = newFileName.c_str();
 	oldFile.open(o);
@@ -115,13 +92,10 @@ void copyFile() {
 	return;
 }
 
-void moveFile() {
+void moveFile(char para[], char para1[]) {
 	string oldPath, newPath;
-	cout << "Enter old path of the file: ";
-	cin >> oldPath;
-	cout << "Enter new path of the file: ";
-	cin >> newPath;
-
+	oldPath = para;
+	newPath = para1;
 	const char * o = oldPath.c_str();
 	const char * n = newPath.c_str();
 
@@ -137,39 +111,123 @@ void moveFile() {
 	return;
 
 }
+void appendText(char para[], char para1[]) {
+	ofstream file;
+	ifstream check;
+	string fileName;
+	string text;
+	fileName = para;
+	text = para1;
+	check.open(fileName);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	check.close();
+	file.open(fileName, ios::app);
+	file << text;
+	cout << "Text added to the end." << endl;
+	return;
+}
 
+void clearFile(char para[]) {
+	ofstream clear;
+	ifstream check;
+	string fileName;
+	fileName = para;
+	check.open(fileName);
+	if (!check.is_open()) {
+		cout << "File does not exist." << endl;
+		return;
+	}
+	check.close();
+	clear.open(fileName);
+	if (clear.is_open())
+		cout << "File cleared." << endl;
+	else
+		cout << "File not cleared." << endl;
+	return;
+}
 int main() {
-	int ch;
+	
 	while (1) {
-		cout << "Enter a choice: " << endl;
-		cout << "1. Create file\n2. Delete file\n3. Rename file\n4. Copy file\n5. Move file\n";
-		cin >> ch;
-		switch (ch) {
-		case 1:
-			createFile();
-			break;
-
-		case 2:
-			removeFile();
-			break;
-			
-		case 3:
-			renameFile();
-			break;
-
-		case 4:
-			copyFile();
-			break;
-
-		case 5:
-			moveFile();
-			break;
-
-		default:
-			cout << "Invalid option." << endl;
+		char input[256];
+		char para[256];
+		char para1[256];
+		cout << "pofm> ";
+		cin.getline(input, 256);
+		if (!strcmp(input, "exit")) {
 			break;
 		}
+		char cmd[10];
+		bool cm = 1, pa = 0,pa1 = 0, end = 0;
 		
+		for (int i = 0, j = 0, k = 0; end != 1; i++) {
+			if (cm == 1) {
+
+				cmd[i] = input[i];
+
+				if (input[i + 1] == ' ') {
+					cmd[i + 1] = '\0';
+					i += 2;
+					cm = 0;
+					pa = 1;
+				}
+			}
+			if (pa == 1) {
+
+				para[j] = input[i];
+
+				if (input[i + 1] == ' ') {
+					para[j + 1] = '\0';
+					i += 2;
+					pa = 0;
+					pa1 = 1;
+				}
+				else if (input[i + 1] == '\0') {
+					para[j + 1] = '\0';
+					break;
+				}
+				j++;
+			}
+			if (pa1 == 1) {
+
+				para1[k] = input[i];
+
+				if (input[i + 1] == '\0') {
+					para1[k + 1] = '\0';
+					cm = 0;
+					pa1 = 0;
+					end = 1;
+					break;
+				}
+				k++;
+			}
+		}
+
+		if (!strcmp(cmd, "mkdir\0")) {
+			createFile(para);
+		}
+		else if (!strcmp(cmd, "rm\0")) {
+			removeFile(para);
+		}
+		else if (!strcmp(cmd, "rename\0")) {
+			renameFile(para,para1);
+		}
+		else if (!strcmp(cmd, "rename\0")) {
+			renameFile(para, para1);
+		}
+		else if (!strcmp(cmd, "copy\0")) {
+			copyFile(para, para1);
+		}
+		else if (!strcmp(cmd, "move\0")) {
+			moveFile(para, para1);
+		}
+		else if (!strcmp(cmd, "txtapp\0")) {
+			appendText(para, para1);
+		}
+		else if (!strcmp(cmd, "txtclr\0")) {
+			clearFile(para);
+		}
 	}
-	return 0;
 }
