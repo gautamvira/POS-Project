@@ -181,17 +181,23 @@ void appendText(char para[], char para1[]) {													// function to append t
 	cout << "Text added to the end." << endl;													// write text to the file and return
 	return;
 }
-void showFile(char para[],char para1[]) {																	// function to show contents of a file
-	int count = 4;                                                                              //to count lines
-	int pos = 0;
+
+void showFile(char para[], char para1[]) {														// function to show contents of a file
+	int pos = 1;
+	string posit = para1;
 	stringstream position(para1);																// converting char position to int
-	position >> pos;
+	if (!posit.empty()) {																		// if second parameter not empty
+		position >> pos;
+		if (pos == 0)																			// if 0 lines entered by user
+			pos = 1;																			// change it to 1
+	}
+	else
+		pos = 1;
 	if (!strcmp(para, "/h")) {																	// if help command is used
-		cout << "txtshow: It's used to show contents of a txt file\nUsage: txtshow Filename " << endl;
+		cout << "txtshow: It's used to show contents of a txt file\nUsage: txtshow Filename no.OfLinesPerPage" << endl;
 		return;
 	}
-	string oldFileName, newFileName, text;
-	ifstream oldFile;
+	string oldFileName, text;
 	ifstream check;
 	oldFileName = para;
 	check.open(oldFileName);
@@ -201,12 +207,11 @@ void showFile(char para[],char para1[]) {																	// function to show co
 	}
 
 	try {	
-		
-												                                                 // print line by line
+												                                                // print line by line
 		cout << "Press Enter to Contiue:: \n";
-		for (int i = 3; (getline(check, text)); i++) {                                          //for each line
-		if (i % pos == 0) {
-			_getch();
+		for (int i = 0; (getline(check, text)); i++) {                                          //for each line
+		if (i % pos == 0) {																		// if number of lines is the user's number
+			_getch();																			// press enter to resume printing
 		}
 		cout << text<<endl;                                                                      //show text
 	}
@@ -285,6 +290,8 @@ int main() {
 		char input[256];
 		char para[256];
 		char para1[256];
+		strcpy_s(para, "");
+		strcpy_s(para1, "");
 		cout << "pofm> ";
 		cin.getline(input, 255);																// get user input
 		if (!strcmp(input, "exit")) {															// if input is 'exit'
@@ -295,7 +302,6 @@ int main() {
 
 		for (int i = 0, j = 0, k = 0; end != 1; i++) {
 			if (cm == 1) {																		// if command entered
-
 				cmd[i] = input[i];
 
 				if (input[i + 1] == ' ') {														// if command over
