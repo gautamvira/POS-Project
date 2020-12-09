@@ -1,7 +1,8 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <conio.h>
 #include <filesystem>
 #include <sstream>
 
@@ -107,8 +108,8 @@ void copyFile(char para[], char para1[]) {																	// function to make a
 		return;																					// display error and return if file does not exist
 	}
 	check.close();
-	const char * o = oldFileName.c_str();														// convert string to constant char *
-	const char * n = newFileName.c_str();
+	const char* o = oldFileName.c_str();														// convert string to constant char *
+	const char* n = newFileName.c_str();
 	oldFile.open(o);																			// open old file to read
 	newFile.open(n);																			// open new file to write
 	try {
@@ -143,8 +144,8 @@ void moveFile(char para[], char para1[]) {														// function to move file
 		return;																					// display error and return if not
 	}
 	check.close();
-	const char * o = oldPath.c_str();															// convert string to constant char *
-	const char * n = newPath.c_str();
+	const char* o = oldPath.c_str();															// convert string to constant char *
+	const char* n = newPath.c_str();
 
 	try {
 		rename(o, n);																			// attempting to move file
@@ -180,8 +181,11 @@ void appendText(char para[], char para1[]) {													// function to append t
 	cout << "Text added to the end." << endl;													// write text to the file and return
 	return;
 }
-
-void showFile(char para[]) {																	// function to show contents of a file
+void showFile(char para[],char para1[]) {																	// function to show contents of a file
+	int count = 4;                                                                              //to count lines
+	int pos = 0;
+	stringstream position(para1);																// converting char position to int
+	position >> pos;
 	if (!strcmp(para, "/h")) {																	// if help command is used
 		cout << "txtshow: It's used to show contents of a txt file\nUsage: txtshow Filename " << endl;
 		return;
@@ -196,16 +200,25 @@ void showFile(char para[]) {																	// function to show contents of a f
 		return;																					// display error and return if does not exist
 	}
 
-	try {
-		while (getline(check, text))															// read contents from file
-			cout << text << endl;																// print line by line
+	try {	
+		
+												                                                 // print line by line
+		cout << "Press Enter to Contiue:: \n";
+		for (int i = 3; (getline(check, text)); i++) {                                          //for each line
+		if (i % pos == 0) {
+			_getch();
+		}
+		cout << text<<endl;                                                                      //show text
+	}
 	}
 	catch (exception const& e) {
 		cout << "Error: " << e.what() << endl;													// display error and return if any exception
 		return;
 	}
+	
 	return;
 }
+
 
 void clearFile(char para[]) {																	// function to clear contents of a file
 	if (!strcmp(para, "/h")) {																	// if help command is used
@@ -337,9 +350,6 @@ int main() {
 		else if (!strcmp(cmd, "rename\0")) {
 			renameFile(para, para1);
 		}
-		else if (!strcmp(cmd, "rename\0")) {
-			renameFile(para, para1);
-		}
 		else if (!strcmp(cmd, "copy\0")) {
 			copyFile(para, para1);
 		}
@@ -353,7 +363,7 @@ int main() {
 			clearFile(para);
 		}
 		else if (!strcmp(cmd, "txtshow\0")) {
-			showFile(para);
+			showFile(para, para1);
 		}
 		else if (!strcmp(cmd, "txtinsert\0")) {
 			insertText(para, para1);
